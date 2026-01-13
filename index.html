@@ -5,399 +5,178 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Transaction Details</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-
   body {
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #5b86e5, #36d1dc, #9b5de5);
-    background-size: 300% 300%;
+    font-family: Arial, sans-serif;
+    background: #f5f6f8;
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 20px;
     margin: 0;
-    animation: gradientShift 15s ease infinite;
+    color: #222;
   }
 
   .card-container {
-    perspective: 1000px;
-    margin: 20px;
+    width: 100%;
+    max-width: 480px;
   }
 
   .card {
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(18px);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    width: 380px;
-    border-radius: 24px;
-    padding: 32px;
-    box-shadow: 
-      0 15px 35px rgba(0, 0, 0, 0.25),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    animation: fadeIn 0.8s ease, float 6s ease-in-out infinite;
-    color: #fff;
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.5s ease, box-shadow 0.5s ease;
-    transform-style: preserve-3d;
-  }
-
-  .card:hover {
-    transform: translateY(-8px) rotateX(2deg) rotateY(2deg);
-    box-shadow: 
-      0 25px 50px rgba(0, 0, 0, 0.35),
-      inset 0 1px 0 rgba(255, 255, 255, 0.3);
-  }
-
-  .card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-    transform: translateX(-100%);
-    transition: transform 0.6s ease;
-  }
-
-  .card:hover::before {
-    transform: translateX(100%);
+    background: #ffffff;
+    border: 1px solid #dcdce0;
+    border-radius: 10px;
+    padding: 28px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   }
 
   .card-header {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    margin-bottom: 30px;
-    position: relative;
+    align-items: center;
+    margin-bottom: 25px;
   }
 
   .card-header h2 {
-    font-size: 24px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    background: linear-gradient(to right, #fff, #e6e6ff);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    position: relative;
-    display: inline-block;
-  }
-
-  .card-header h2::after {
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 60%;
-    height: 3px;
-    background: linear-gradient(to right, #36d1dc, #9b5de5);
-    border-radius: 2px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #222;
   }
 
   .status-badge {
+    background: #f6f6f7;
+    border: 1px solid #ccc;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
     display: flex;
     align-items: center;
-    gap: 8px;
-    background: rgba(255, 77, 79, 0.2);
-    border: 1px solid rgba(255, 77, 79, 0.4);
-    padding: 8px 16px;
-    border-radius: 50px;
-    font-weight: 600;
-    font-size: 14px;
-    animation: pulse 2s infinite;
-  }
-
-  .status-badge i {
-    font-size: 12px;
-  }
-
-  .transaction-icon {
-    position: absolute;
-    right: 0;
-    top: 0;
-    font-size: 60px;
-    opacity: 0.1;
-    z-index: 0;
+    gap: 6px;
   }
 
   .row {
-    margin-bottom: 18px;
-    font-size: 15px;
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 12px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-    position: relative;
-    z-index: 1;
-    transition: all 0.3s ease;
+    padding: 10px 0;
+    font-size: 15px;
+    border-bottom: 1px solid #ececec;
   }
 
-  .row:hover {
-    padding-left: 10px;
-    border-bottom-color: rgba(255, 255, 255, 0.3);
-  }
+  .row:first-of-type { border-top: 1px solid #ececec; }
 
   .row-label {
     display: flex;
+    gap: 8px;
     align-items: center;
-    gap: 10px;
     font-weight: 500;
-    color: #e9eefb;
+    color: #555;
   }
 
   .row-label i {
-    width: 20px;
-    text-align: center;
-    color: #36d1dc;
+    font-size: 14px;
+    color: #777;
   }
 
   .row-value {
     font-weight: 600;
+    color: #222;
     text-align: right;
-    max-width: 60%;
-    word-break: break-word;
-  }
-
-  .row-value.important {
-    font-size: 16px;
-    color: #fff;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
   }
 
   .row-value em {
-    opacity: 0.85;
     font-style: normal;
     font-weight: 400;
+    color: #777;
   }
 
   .reference-no {
-    background: linear-gradient(45deg, #36d1dc, #5b86e5);
-    padding: 12px 20px;
-    border-radius: 12px;
-    text-align: center;
     margin-top: 20px;
-    box-shadow: 0 5px 15px rgba(36, 209, 220, 0.3);
-    position: relative;
-    overflow: hidden;
+    background: #efefef;
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
     cursor: pointer;
-    transition: all 0.3s ease;
-  }
-
-  .reference-no:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(36, 209, 220, 0.4);
-  }
-
-  .reference-no::before {
-    content: 'Click to copy';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 1px;
-  }
-
-  .reference-no:hover::before {
-    opacity: 1;
   }
 
   .reference-no-text {
-    font-weight: 700;
-    font-size: 18px;
-    letter-spacing: 1px;
-  }
-
-  .notification {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: rgba(255, 255, 255, 0.95);
-    color: #333;
-    padding: 15px 25px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    transform: translateX(150%);
-    transition: transform 0.4s ease;
-    z-index: 1000;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .notification.show {
-    transform: translateX(0);
-  }
-
-  .notification i {
-    color: #36d1dc;
+    font-weight: 600;
+    letter-spacing: 0.3px;
   }
 
   .action-buttons {
     display: flex;
     justify-content: space-between;
     margin-top: 25px;
-    gap: 15px;
+    gap: 12px;
   }
 
   .btn {
     flex: 1;
-    padding: 12px;
-    border: none;
-    border-radius: 10px;
-    font-family: 'Poppins', sans-serif;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #b5b5b5;
+    background: #fafafa;
+    color: #333;
     font-weight: 600;
-    font-size: 14px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+    font-size: 14px;
+  }
+
+  .btn:hover {
+    background: #eaeaea;
   }
 
   .btn-primary {
-    background: linear-gradient(45deg, #5b86e5, #36d1dc);
-    color: white;
-    box-shadow: 0 5px 15px rgba(36, 209, 220, 0.3);
+    background: #ececec;
   }
 
-  .btn-primary:hover {
-    background: linear-gradient(45deg, #36d1dc, #5b86e5);
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(36, 209, 220, 0.4);
-  }
-
-  .btn-secondary {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-  }
-
-  .btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-3px);
-  }
-
-  /* Animations */
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px) rotateX(10deg); }
-    to { opacity: 1; transform: translateY(0) rotateX(0); }
-  }
-
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-  }
-
-  @keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-
-  @keyframes pulse {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(255, 77, 79, 0.4); }
-    50% { box-shadow: 0 0 0 8px rgba(255, 77, 79, 0); }
-  }
-
-  @keyframes shimmer {
-    0% { background-position: -1000px 0; }
-    100% { background-position: 1000px 0; }
-  }
-
-  /* Responsive adjustments */
-  @media (max-width: 480px) {
-    .card {
-      width: 100%;
-      padding: 24px;
-    }
-    
-    .action-buttons {
-      flex-direction: column;
-    }
+  .notification {
+    display: none;
   }
 </style>
 </head>
-<body>
 
+<body>
 <div class="card-container">
   <div class="card">
-    <i class="fas fa-exchange-alt transaction-icon"></i>
-    
     <div class="card-header">
       <h2>Transaction Details</h2>
       <div class="status-badge">
-        <i class="fas fa-clock"></i>
-        <span>Pending</span>
+        <i class="fas fa-clock"></i> Pending
       </div>
     </div>
 
     <div class="row">
-      <div class="row-label">
-        <i class="fas fa-calendar-alt"></i>
-        <span>Date:</span>
-      </div>
+      <div class="row-label"><i class="fas fa-calendar-alt"></i> Date</div>
       <div class="row-value">02 December 2025</div>
     </div>
 
     <div class="row">
-      <div class="row-label">
-        <i class="fas fa-credit-card"></i>
-        <span>Account No:</span>
-      </div>
+      <div class="row-label"><i class="fas fa-credit-card"></i> Account No</div>
       <div class="row-value">693905167700049</div>
     </div>
 
     <div class="row">
-      <div class="row-label">
-        <i class="fas fa-university"></i>
-        <span>Bank Name:</span>
-      </div>
+      <div class="row-label"><i class="fas fa-university"></i> Bank Name</div>
       <div class="row-value">arkvaultpro</div>
     </div>
 
     <div class="row">
-      <div class="row-label">
-        <i class="fas fa-fee"></i>
-        <span>Transaction Fee:</span>
-      </div>
-      <div class="row-value important">R$8700 BRL</div>
+      <div class="row-label"><i class="fas fa-wallet"></i> Transaction Fee</div>
+      <div class="row-value">R$8700 BRL</div>
     </div>
 
     <div class="row">
-      <div class="row-label">
-        <i class="fas fa-credit-card"></i>
-        <span>Payment Method:</span>
-      </div>
+      <div class="row-label"><i class="fas fa-credit-card"></i> Payment Method</div>
       <div class="row-value"><em>contact support</em></div>
     </div>
 
     <div class="row">
-      <div class="row-label">
-        <i class="fas fa-map-marker-alt"></i>
-        <span>Payment Address:</span>
-      </div>
+      <div class="row-label"><i class="fas fa-map-marker-alt"></i> Payment Address</div>
       <div class="row-value"><em>contact support</em></div>
     </div>
 
@@ -406,120 +185,115 @@
     </div>
 
     <div class="action-buttons">
-      <button class="btn btn-secondary">
-        <i class="fas fa-download"></i> Export
-      </button>
-      <button class="btn btn-primary">
-        <i class="fas fa-headset"></i> Contact Support
-      </button>
+      <button class="btn" id="exportBtn"><i class="fas fa-download"></i> Export</button>
+      <button class="btn btn-primary"><i class="fas fa-headset"></i> Contact Support</button>
     </div>
   </div>
 </div>
 
-<div class="notification" id="notification">
-  <i class="fas fa-check-circle"></i>
-  <span>Reference number copied to clipboard!</span>
-</div>
-
 <script>
-// Copy reference number functionality
-  document.getElementById('referenceCopy').addEventListener('click', function() {
-    const textToCopy = 'ARK-8367b03eff';
-    
-    // Copy to clipboard
-    navigator.clipboard.writeText(textToCopy).then(() => {
-      // Show notification
-      const notification = document.getElementById('notification');
-      notification.classList.add('show');
-      
-      // Hide notification after 3 seconds
-      setTimeout(() => {
-        notification.classList.remove('show');
-      }, 3000);
-      
-      // Add visual feedback to the reference box
-      this.style.background = 'linear-gradient(45deg, #4CAF50, #8BC34A)';
-      this.style.transform = 'scale(1.05)';
-      
-      setTimeout(() => {
-        this.style.background = 'linear-gradient(45deg, #36d1dc, #5b86e5)';
-        this.style.transform = 'scale(1)';
-      }, 500);
-    });
+	// =========================
+// COPY REFERENCE
+// =========================
+document.getElementById('referenceCopy').addEventListener('click', function() {
+  const textToCopy = 'ARK-8367b03eff';
+
+  navigator.clipboard.writeText(textToCopy).then(() => {
+    const notification = document.getElementById('notification');
+    notification.classList.add('show');
+
+    setTimeout(() => {
+      notification.classList.remove('show');
+    }, 3000);
+
+    this.style.background = 'linear-gradient(45deg, #4CAF50, #8BC34A)';
+    this.style.transform = 'scale(1.05)';
+
+    setTimeout(() => {
+      this.style.background = 'linear-gradient(45deg, #36d1dc, #5b86e5)';
+      this.style.transform = 'scale(1)';
+    }, 500);
   });
-
-  // Button click animations
-  document.querySelectorAll('.btn').forEach(button => {
-    button.addEventListener('click', function() {
-      this.style.transform = 'scale(0.98)';
-      setTimeout(() => {
-        this.style.transform = '';
-      }, 150);
-    });
-  });
-
-  // Add shimmer effect to rows on hover
-  document.querySelectorAll('.row').forEach(row => {
-    row.addEventListener('mouseenter', function() {
-      const labelIcon = this.querySelector('.row-label i');
-      labelIcon.style.transform = 'rotate(15deg) scale(1.2)';
-      labelIcon.style.color = '#9b5de5';
-    });
-    
-    row.addEventListener('mouseleave', function() {
-      const labelIcon = this.querySelector('.row-label i');
-      labelIcon.style.transform = 'rotate(0) scale(1)';
-      labelIcon.style.color = '#36d1dc';
-    });
-  });
-
-  // Parallax effect on card
-  document.querySelector('.card-container').addEventListener('mousemove', function(e) {
-    const card = this.querySelector('.card');
-    const cardWidth = card.offsetWidth;
-    const cardHeight = card.offsetHeight;
-    const centerX = card.offsetLeft + cardWidth/2;
-    const centerY = card.offsetTop + cardHeight/2;
-    const mouseX = e.clientX - centerX;
-    const mouseY = e.clientY - centerY;
-    
-    const rotateX = (mouseY / cardHeight) * 10; // Reduced rotation
-    const rotateY = -(mouseX / cardWidth) * 10; // Reduced rotation
-    
-    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
-  });
-  
-  document.querySelector('.card-container').addEventListener('mouseleave', function() {
-    const card = this.querySelector('.card');
-    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
-  });
-  
-  // Export details as CSV
-document.getElementById('exportBtn').addEventListener('click', function () {
-  const data = [
-    ['Status', 'Pending'],
-    ['Date', '02 December 2025'],
-    ['Account No', '693905167700049'],
-    ['Bank Name', 'WISE BANK'],
-    ['Transaction Fee', 'R$8500 BRL'],
-    ['Payment Method', 'contact support'],
-    ['Payment Address', 'contact support'],
-    ['Reference No', 'ARK-8367b03eff']
-  ];
-
-  // Convert array to CSV
-  const csvContent = data.map(e => e.join(',')).join('\n');
-
-  // Create file & download
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'transaction-details.csv';
-  a.click();
-  URL.revokeObjectURL(url);
 });
+
+// =========================
+// BUTTON CLICK ANIMATION
+// =========================
+document.querySelectorAll('.btn').forEach(button => {
+  button.addEventListener('click', function() {
+    this.style.transform = 'scale(0.98)';
+    setTimeout(() => {
+      this.style.transform = '';
+    }, 150);
+  });
+});
+
+// =========================
+// HOVER EFFECT ON ROWS
+// =========================
+document.querySelectorAll('.row').forEach(row => {
+  row.addEventListener('mouseenter', function() {
+    const labelIcon = this.querySelector('.row-label i');
+    labelIcon.style.transform = 'rotate(15deg) scale(1.2)';
+    labelIcon.style.color = '#9b5de5';
+  });
+
+  row.addEventListener('mouseleave', function() {
+    const labelIcon = this.querySelector('.row-label i');
+    labelIcon.style.transform = 'rotate(0) scale(1)';
+    labelIcon.style.color = '#36d1dc';
+  });
+});
+
+// =========================
+// PARALLAX CARD EFFECT
+// =========================
+document.querySelector('.card-container').addEventListener('mousemove', function(e) {
+  const card = this.querySelector('.card');
+  const cardWidth = card.offsetWidth;
+  const cardHeight = card.offsetHeight;
+  const centerX = card.offsetLeft + cardWidth / 2;
+  const centerY = card.offsetTop + cardHeight / 2;
+  const mouseX = e.clientX - centerX;
+  const mouseY = e.clientY - centerY;
+
+  const rotateX = (mouseY / cardHeight) * 10;
+  const rotateY = -(mouseX / cardWidth) * 10;
+
+  card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
+});
+
+document.querySelector('.card-container').addEventListener('mouseleave', function() {
+  const card = this.querySelector('.card');
+  card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
+});
+
+// =========================
+// FIXED EXPORT BUTTON
+// =========================
+const exportBtn = document.getElementById('exportBtn');
+
+if (exportBtn) {
+  exportBtn.addEventListener('click', function () {
+    const content = [
+      'Reference: ARK-8367b03eff',
+      'Amount: ₦5,000',
+      'Status: Successful',
+      'Receiver: John Doe',
+      'Date: Feb 15, 2026'
+    ].join('\n');
+
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'transaction-details.txt';
+    link.click();
+
+    URL.revokeObjectURL(url);
+  });
+}
 </script>
 
 </body>
